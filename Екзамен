@@ -1,0 +1,110 @@
+ОСНОВНИЙ КОД
+
+using System;
+using System.Windows.Forms;
+
+public class MainForm : Form
+{
+    private TextBox txtLampInfo;
+    private TextBox txtCameraInfo;
+    private Button btnChangeSensitivity;
+    private TextBox txtNewSensitivity;
+
+    private PhotoStudio studio1;
+    private PhotoStudio studio2;
+
+    public MainForm()
+    {
+        InitializeComponent();
+
+        studio1 = new PhotoStudio("LED", "Philips", 800, "LED Bulb", 4, "DSLR", "Canon", 1600);
+        studio2 = new PhotoStudio("Halogen", "Osram", 1500, "Halogen Bulb", 2, "Mirrorless", "Sony", 3200);
+
+        DisplayInfo();
+    }
+
+    private void InitializeComponent()
+    {
+        this.txtLampInfo = new TextBox();
+        this.txtCameraInfo = new TextBox();
+        this.btnChangeSensitivity = new Button();
+        this.txtNewSensitivity = new TextBox();
+
+        this.SuspendLayout();
+
+        // 
+        // txtLampInfo
+        // 
+        this.txtLampInfo.Location = new System.Drawing.Point(12, 12);
+        this.txtLampInfo.Multiline = true;
+        this.txtLampInfo.Size = new System.Drawing.Size(300, 100);
+        this.txtLampInfo.ReadOnly = true;
+
+        // 
+        // txtCameraInfo
+        // 
+        this.txtCameraInfo.Location = new System.Drawing.Point(12, 120);
+        this.txtCameraInfo.Multiline = true;
+        this.txtCameraInfo.Size = new System.Drawing.Size(300, 100);
+        this.txtCameraInfo.ReadOnly = true;
+
+        // 
+        // btnChangeSensitivity
+        // 
+        this.btnChangeSensitivity.Location = new System.Drawing.Point(12, 260);
+        this.btnChangeSensitivity.Size = new System.Drawing.Size(150, 23);
+        this.btnChangeSensitivity.Text = "Change Sensitivity";
+        this.btnChangeSensitivity.Click += new EventHandler(this.BtnChangeSensitivity_Click);
+
+        // 
+        // txtNewSensitivity
+        // 
+        this.txtNewSensitivity.Location = new System.Drawing.Point(180, 260);
+        this.txtNewSensitivity.Size = new System.Drawing.Size(100, 23);
+
+        // 
+        // MainForm
+        // 
+        this.ClientSize = new System.Drawing.Size(350, 300);
+        this.Controls.Add(this.txtLampInfo);
+        this.Controls.Add(this.txtCameraInfo);
+        this.Controls.Add(this.btnChangeSensitivity);
+        this.Controls.Add(this.txtNewSensitivity);
+        this.Text = "PhotoStudio Equipment";
+        this.ResumeLayout(false);
+        this.PerformLayout();
+    }
+
+    private void DisplayInfo()
+    {
+        txtLampInfo.Text = $"Studio 1 Lamp Info:\nType: {studio1.Type}, Manufacturer: {studio1.Manufacturer}, Lumen Power: {studio1.LumenPower}, Element Type: {studio1.ElementType}, Element Count: {studio1.ElementCount}\n\n" +
+                           $"Studio 2 Lamp Info:\nType: {studio2.Type}, Manufacturer: {studio2.Manufacturer}, Lumen Power: {studio2.LumenPower}, Element Type: {studio2.ElementType}, Element Count: {studio2.ElementCount}";
+
+        txtCameraInfo.Text = $"Studio 1 Camera Info:\nType: {studio1.Type}, Manufacturer: {studio1.Manufacturer}, Sensitivity: {studio1.Sensitivity}\n\n" +
+                             $"Studio 2 Camera Info:\nType: {studio2.Type}, Manufacturer: {studio2.Manufacturer}, Sensitivity: {studio2.Sensitivity}";
+    }
+
+    private void BtnChangeSensitivity_Click(object sender, EventArgs e)
+    {
+        if (int.TryParse(txtNewSensitivity.Text, out int newSensitivity))
+        {
+            studio1.ChangeSensitivity(newSensitivity);
+            DisplayInfo();
+        }
+        else
+        {
+            MessageBox.Show("Please enter a valid sensitivity value.");
+        }
+    }
+}
+
+public static class Program
+{
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        Application.Run(new MainForm());
+    }
+}
